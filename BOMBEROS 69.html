@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Hello, World!</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+      <h1 class="title">Hello World!</h1>
+      <p id="currentTime"></p>
+      <script src="script.js"></script>
+  </body>
+</html><!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>BOMBEROS 69</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{font-family:Arial;background:#111;color:#fff;margin:0}
+header{background:#b30000;padding:15px;text-align:center;font-size:22px;font-weight:bold}
+button{width:100%;padding:12px;margin:6px 0;font-size:16px;background:#e60000;color:#fff;border:none;border-radius:6px}
+section{display:none;padding:15px}
+label{margin-top:10px;display:block}
+input,select,textarea{width:100%;padding:8px;margin-top:4px;border-radius:5px;border:none}
+textarea{height:220px}
+.sug{background:#222;border-radius:5px;max-height:120px;overflow-y:auto}
+.sug div{padding:6px;border-bottom:1px solid #333}
+.sug div:hover{background:#444;cursor:pointer}
+ul{list-style:none;padding:0}
+li{background:#222;padding:6px;margin-top:5px;border-radius:4px;display:flex;justify-content:space-between}
+li button{width:auto;background:#900}
+.copy{background:#007a33}
+.call{background:#0033cc}
+.manual{background:#555}
+</style>
+</head>
+
+<body>
+
+<header>BOMBEROS 69</header>
+
+<div style="padding:15px">
+<button onclick="ver('emergencia')">🚨 Reporte de Emergencia</button>
+<button onclick="ver('guardia')">🌙 Guardia Nocturna</button>
+<button onclick="ver('recursos')">📞 Recursos</button>
+</div>
+
+<script>
+/* ===== BASE PERSISTENTE ===== */
+const baseInicial = [
+"3.03 Ludeña García Roger Helí",
+"3.03 Vértiz Osores David Daniel",
+"3.04 Gonzales Elser",
+"3.04 Martin Zapata Vilela",
+"3.05 Vértiz Osores Juan Carlos",
+"3.06 Victo",
+"3.07 Gil García Daniel",
+"3.07 Gonzáles Centurión Engelomar",
+"3.07 Burga Sosa Mónica Iné",
+"3.08 Álvarez Linarez Nexar Aldair",
+"3.08 Flores Mejía Yeltsin Manuel",
+"3.08 Huamán Delgado Carlos",
+"3.08 Morales Sangama José Antonio",
+"3.08 Oliva García Jefferson Luis",
+"3.08 Quilcate Regalado Irina del Pilar",
+"3.08 Rivera Saldaña Carlos Daniel",
+"3.08 Villanueva Peralta Zully Yakori",
+"3.08 Reyes Castillo David Alberto",
+"3.08 Cubas Perez Lorynm",
+"3.08 Vargas Lucerito",
+"3.08 Jimenez Bryan",
+"3.08 Monsalve Carlos",
+"3.08 Maicol Melde Suarez",
+"3.08 Jose Suarez Guerrero",
+"3.08 Yanire",
+"3.08 James Paredes"
+];
+
+let personal = JSON.parse(localStorage.getItem("personal69")) || baseInicial;
+const pilotosRentados = [
+"10.49 Clodoaldo Villanueva Tarrillo",
+"10.49 Ludeña García Roger Helí"
+];
+
+let apoyos=[], baseGuardia=[];
+
+function guardarPersonal(){
+localStorage.setItem("personal69", JSON.stringify(personal));
+}
+</script>
+
+<!-- 🚨 EMERGENCIA -->
+<section id="emergencia">
+<h3>Reporte de Emergencia</h3>
+
+<label>Tipo de Emergencia</label>
+<select id="tipo">
+<option>Incendio Estructural</option>
+<option>Incendio Vehicular</option>
+<option>Accidente Vehicular</option>
+<option>Emergencia Médica</option>
+<option>Fuga de Gas</option>
+<option>Corto Circuito</option>
+<option>Rescate</option>
+</select>
+
+<label>Dirección (10.18) <small>(opcional)</small></label>
+<input id="direccion" placeholder="Ej: Av. Grau cuadra 5, frente al mercado">
+
+<label>Unidad</label>
+<select id="unidad">
+<option>Máquina 69</option>
+<option>Cisterna 69</option>
+<option>Rescate 69</option>
+<option>Forestal 69</option>
+</select>
+
+<label>Efectivo al mando</label>
+<input id="mando" oninput="buscar(this,'sugMando',personal)">
+<div id="sugMando" class="sug"></div>
+
+<label>Personal de apoyo (base)</label>
+<input oninput="buscar(this,'sugApoyo',personal)">
+<div id="sugApoyo" class="sug"></div>
+
+<label>Agregar apoyo manual</label>
+<input id="manualApoyo">
+<button class="manual" onclick="agregarManualApoyo()">➕ Agregar y guardar</button>
+
+<ul id="listaApoyo"></ul>
+
+<label>Tipo de piloto</label>
+<select id="tipoPiloto" onchange="pilotoEmergencia(this.value)">
+<option value="">Seleccionar</option>
+<option value="rentado">Piloto Rentado</option>
+<option value="voluntario">Piloto Voluntario</option>
+</select>
+
+<div id="pilotoE"></div>
+
+<button onclick="genEmergencia()">Generar Reporte</button>
+<textarea id="resEmergencia"></textarea>
+<button class="copy" onclick="copiar('resEmergencia')">Copiar para WhatsApp</button>
+</section>
+
+<!-- 🌙 GUARDIA -->
+<section id="guardia">
+<h3>Guardia Nocturna</h3>
+
+<label>Efectivos en Base</label>
+<input oninput="buscar(this,'sugBase',personal)">
+<div id="sugBase" class="sug"></div>
+
+<label>Agregar efectivo manual</label>
+<input id="manualBase">
+<button class="manual" onclick="agregarManualBase()">➕ Agregar y guardar</button>
+
+<ul id="listaBase"></ul>
+
+<label>Piloto Operativo</label>
+<select onchange="pilotoGuardia(this.value)">
+<option value="">Seleccionar</option>
+<option value="rentado">Piloto Rentado</option>
+<option value="voluntario">Piloto Voluntario</option>
+</select>
+
+<div id="pilotoG"></div>
+
+<button onclick="genGuardia()">Generar Reporte</button>
+<textarea id="resGuardia"></textarea>
+<button class="copy" onclick="copiar('resGuardia')">Copiar para WhatsApp</button>
+</section>
+
+<!-- 📞 RECURSOS -->
+<section id="recursos">
+<button class="call" onclick="llamar('105')">🚓 Policía</button>
+<button class="call" onclick="llamar('080011111')">🚔 Serenazgo</button>
+<button class="call" onclick="llamar('116')">🚒 Bomberos</button>
+<button class="call" onclick="llamar('106')">🏥 Hospital</button>
+</section>
+
+<script>
+function ver(id){
+document.querySelectorAll("section").forEach(s=>s.style.display="none");
+document.getElementById(id).style.display="block";
+}
+
+function buscar(inp, cont, lista){
+const c=document.getElementById(cont);
+c.innerHTML="";
+if(!inp.value) return;
+lista.filter(n=>n.toLowerCase().includes(inp.value.toLowerCase()))
+.forEach(n=>{
+const d=document.createElement("div");
+d.textContent=n;
+d.onclick=()=>{
+if(cont==="sugApoyo"){if(!apoyos.includes(n)){apoyos.push(n);renderApoyo();} inp.value="";}
+else if(cont==="sugBase"){if(!baseGuardia.includes(n)){baseGuardia.push(n);renderBase();} inp.value="";}
+else inp.value=n;
+c.innerHTML="";
+};
+c.appendChild(d);
+});
+}
+
+function agregarManualApoyo(){
+const v=manualApoyo.value.trim();
+if(v && !personal.includes(v)){personal.push(v);guardarPersonal();}
+if(v && !apoyos.includes(v)){apoyos.push(v);renderApoyo();}
+manualApoyo.value="";
+}
+
+function agregarManualBase(){
+const v=manualBase.value.trim();
+if(v && !personal.includes(v)){personal.push(v);guardarPersonal();}
+if(v && !baseGuardia.includes(v)){baseGuardia.push(v);renderBase();}
+manualBase.value="";
+}
+
+function renderApoyo(){
+listaApoyo.innerHTML="";
+apoyos.forEach(a=>{
+listaApoyo.innerHTML+=`<li>${a}<button onclick="apoyos=apoyos.filter(x=>x!='${a}');renderApoyo()">❌</button></li>`;
+});
+}
+
+function renderBase(){
+listaBase.innerHTML="";
+baseGuardia.forEach(b=>{
+listaBase.innerHTML+=`<li>${b}<button onclick="baseGuardia=baseGuardia.filter(x=>x!='${b}');renderBase()">❌</button></li>`;
+});
+}
+
+function pilotoEmergencia(t){
+pilotoE.innerHTML="";
+if(t==="rentado") pilotoE.innerHTML=`<input oninput="buscar(this,'sugPE',pilotosRentados)"><div id="sugPE" class="sug"></div>`;
+if(t==="voluntario") pilotoE.innerHTML=`<input oninput="buscar(this,'sugPE',personal)"><div id="sugPE" class="sug"></div>`;
+}
+
+function pilotoGuardia(t){
+pilotoG.innerHTML="";
+if(t==="rentado") pilotoG.innerHTML=`<input oninput="buscar(this,'sugPG',pilotosRentados)"><div id="sugPG" class="sug"></div>`;
+if(t==="voluntario") pilotoG.innerHTML=`<input oninput="buscar(this,'sugPG',personal)"><div id="sugPG" class="sug"></div>`;
+}
+
+function genEmergencia(){
+let dir = direccion.value.trim();
+resEmergencia.value=`REPORTE DE EMERGENCIA UBO 69
+
+🔥 Tipo de Emergencia:
+${tipo.value}
+${dir ? "\n📍 Dirección (10.18):\n"+dir : ""}
+
+🚒 Unidad que sale:
+${unidad.value}
+
+👨‍✈️ Efectivo al mando:
+${mando.value}
+
+👥 Personal de apoyo:
+${apoyos.join("\n")}
+
+✈️ Tipo de piloto:
+${tipoPiloto.options[tipoPiloto.selectedIndex].text}
+
+👨‍✈️ Nombre del piloto:
+${document.querySelector("#pilotoE input")?.value||""}
+
+📅 Fecha:
+${new Date().toLocaleString()}`;
+}
+
+function genGuardia(){
+resGuardia.value=`REPORTE DE GUARDIA NOCTURNA UBO 69
+
+👥 Efectivos en base:
+${baseGuardia.join("\n")}
+
+✈️ Piloto operativo:
+${document.querySelector("#pilotoG input")?.value||""}
+
+📅 Fecha:
+${new Date().toLocaleString()}`;
+}
+
+function copiar(id){
+navigator.clipboard.writeText(document.getElementById(id).value);
+alert("Reporte copiado");
+}
+
+function llamar(n){location.href="tel:"+n;}
+</script>
+
+</body>
+</html>
